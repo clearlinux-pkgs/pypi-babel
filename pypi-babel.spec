@@ -4,7 +4,7 @@
 #
 Name     : pypi-babel
 Version  : 2.10.1
-Release  : 94
+Release  : 95
 URL      : https://files.pythonhosted.org/packages/23/a6/a616817c8e4fb1a69f7e8aae9fc7fce1a147e1a492f45b6fa0b7d6823178/Babel-2.10.1.tar.gz
 Source0  : https://files.pythonhosted.org/packages/23/a6/a616817c8e4fb1a69f7e8aae9fc7fce1a147e1a492f45b6fa0b7d6823178/Babel-2.10.1.tar.gz
 Summary  : Internationalization utilities
@@ -65,13 +65,16 @@ python3 components for the pypi-babel package.
 %prep
 %setup -q -n Babel-2.10.1
 cd %{_builddir}/Babel-2.10.1
+pushd ..
+cp -a Babel-2.10.1 buildavx2
+popd
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1650552915
+export SOURCE_DATE_EPOCH=1653004976
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -fno-lto "
 export FCFLAGS="$FFLAGS -fno-lto "
@@ -85,16 +88,35 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 py.test tests || :
+pushd ../buildavx2/
+export CFLAGS="$CFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3 "
+export CXXFLAGS="$CXXFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3 "
+export FFLAGS="$FFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3 "
+export FCFLAGS="$FCFLAGS -m64 -march=x86-64-v3 "
+export LDFLAGS="$LDFLAGS -m64 -march=x86-64-v3 "
+python3 setup.py build
+
+popd
 %install
 export MAKEFLAGS=%{?_smp_mflags}
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/pypi-babel
+cp %{_builddir}/Babel-2.10.1/LICENSE %{buildroot}/usr/share/package-licenses/pypi-babel/461006fda89ca3bf051ce8ff474915073c065b69
 cp %{_builddir}/Babel-2.10.1/docs/_themes/LICENSE %{buildroot}/usr/share/package-licenses/pypi-babel/d0eff60551064b040266867c393e035d747b0ae5
 cp %{_builddir}/Babel-2.10.1/docs/license.rst %{buildroot}/usr/share/package-licenses/pypi-babel/11b5e2224ed952488aa2abbd6c9f41c64a7eca3e
 python3 -tt setup.py build  install --root=%{buildroot}
 echo ----[ mark ]----
 cat %{buildroot}/usr/lib/python3*/site-packages/*/requires.txt || :
 echo ----[ mark ]----
+pushd ../buildavx2/
+export CFLAGS="$CFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3 "
+export CXXFLAGS="$CXXFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3 "
+export FFLAGS="$FFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3 "
+export FCFLAGS="$FCFLAGS -m64 -march=x86-64-v3 "
+export LDFLAGS="$LDFLAGS -m64 -march=x86-64-v3 "
+python3 -tt setup.py build install --root=%{buildroot}-v3
+popd
+/usr/bin/elf-move.py avx2 %{buildroot}-v3 %{buildroot}/usr/share/clear/optimized-elf/ %{buildroot}/usr/share/clear/filemap/filemap-%{name}
 
 %files
 %defattr(-,root,root,-)
@@ -106,6 +128,7 @@ echo ----[ mark ]----
 %files license
 %defattr(0644,root,root,0755)
 /usr/share/package-licenses/pypi-babel/11b5e2224ed952488aa2abbd6c9f41c64a7eca3e
+/usr/share/package-licenses/pypi-babel/461006fda89ca3bf051ce8ff474915073c065b69
 /usr/share/package-licenses/pypi-babel/d0eff60551064b040266867c393e035d747b0ae5
 
 %files python
