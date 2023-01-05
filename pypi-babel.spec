@@ -4,7 +4,7 @@
 #
 Name     : pypi-babel
 Version  : 2.11.0
-Release  : 107
+Release  : 108
 URL      : https://files.pythonhosted.org/packages/ff/80/45b42203ecc32c8de281f52e3ec81cb5e4ef16127e9e8543089d8b1649fb/Babel-2.11.0.tar.gz
 Source0  : https://files.pythonhosted.org/packages/ff/80/45b42203ecc32c8de281f52e3ec81cb5e4ef16127e9e8543089d8b1649fb/Babel-2.11.0.tar.gz
 Summary  : Internationalization utilities
