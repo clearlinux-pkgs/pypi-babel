@@ -1,5 +1,5 @@
 PKG_NAME := pypi-babel
-URL = https://files.pythonhosted.org/packages/e2/80/cfbe44a9085d112e983282ee7ca4c00429bc4d1ce86ee5f4e60259ddff7f/Babel-2.14.0.tar.gz
+URL = https://files.pythonhosted.org/packages/15/d2/9671b93d623300f0aef82cde40e25357f11330bdde91743891b22a555bed/babel-2.15.0.tar.gz
 ARCHIVES = 
 
 include ../common/Makefile.common
